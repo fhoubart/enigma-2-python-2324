@@ -7,9 +7,7 @@ data = pd.DataFrame({
     'majeur':[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
 })
 
-from sklearn.naive_bayes import GaussianNB
-
-logreg = GaussianNB()
+logreg = LogisticRegression()
 
 learnData = data.loc[:,['age']]
 target = data.loc[:,'majeur']
