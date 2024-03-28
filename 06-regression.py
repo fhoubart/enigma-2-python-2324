@@ -3,11 +3,13 @@ from sklearn.linear_model import LogisticRegression
 
 
 data = pd.DataFrame({
-    'age':[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27],
-    'majeur':[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
+    'age':[3,4,6,7,8,9,10,11,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27],
+    'majeur':[0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1]
 })
 
-logreg = LogisticRegression()
+from sklearn.naive_bayes import GaussianNB
+
+logreg = GaussianNB()
 
 learnData = data.loc[:,['age']]
 target = data.loc[:,'majeur']

@@ -19,13 +19,13 @@ data = data[data["rr1"]!="mq"]
 data.replace("mq", pd.NA, inplace=True)
 data.dropna()
 
-size = data.size
+size = len(data)
 learnSetRatio = 0.5
 
 # Séparation du jeu de données en deux sous ensembles pour l'apprentissage et la validation
-learnData = data.head(math.floor(size/learnSetRatio))
+learnData = data.head(math.floor(size*learnSetRatio))
 #learnData = data.loc[:math.floor(size/learnSetRatio)]
-testData = data.tail(math.ceil(size/learnSetRatio))
+testData = data.tail(math.ceil(size*learnSetRatio))
 
 # Création du modèle de régression
 logreg = LogisticRegression()

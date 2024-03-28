@@ -219,3 +219,5 @@ secondes = int(re.search(pattern,chaine).group(3))
 milisecondes = int(re.search(pattern,chaine).group(4))
 total = milisecondes + secondes * 1000 + minutes * 60000 + heures * 3600000
 print(total)
+
+

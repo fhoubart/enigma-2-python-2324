@@ -13,10 +13,10 @@ data1 = {}
 for line in lines[1:]:
     ecole = line.strip().split(";")
     # ecole = ['2022','AUVERGNE-ET-RHONE-ALPES', ...]
-    secteur = ecole[3]
-    if not secteur in data1: # le secteur n'est pas encore dans le dictionnaire
-        data1[secteur] = []
-    data1[secteur].append(ecole)
+    region = ecole[3]
+    if not region in data1: # le secteur n'est pas encore dans le dictionnaire
+        data1[region] = []
+    data1[region].append(ecole)
 
 print("Infos pour le NORD")
 nord = data1["NORD"]
@@ -44,18 +44,18 @@ data2 = {}
 for line in lines[1:]:
     ecole = line.strip().split(";")
     # ecole = ['2022','AUVERGNE-ET-RHONE-ALPES', ...]
-    secteur = ecole[3]
-    if not secteur in data2: # le secteur n'est pas encore dans le dictionnaire
-        data2[secteur] = {
+    region = ecole[3]
+    if not region in data2: # le secteur n'est pas encore dans le dictionnaire
+        data2[region] = {
             "public": 0,
             "prive": 0,
             "sum_cp": 0,
             "total_cp": 0
         }
-    if ecole[8] == "PRIVE": data2[secteur]["prive"] += 1
-    if ecole[8] == "PUBLIC": data2[secteur]["public"] += 1
-    data2[secteur]["sum_cp"] += int(ecole[16])
-    data2[secteur]["total_cp"] += 1
+    if ecole[8] == "PRIVE": data2[region]["prive"] += 1
+    if ecole[8] == "PUBLIC": data2[region]["public"] += 1
+    data2[region]["sum_cp"] += int(ecole[16])
+    data2[region]["total_cp"] += 1
     
 print("Infos pour le NORD")
 nord = data2["NORD"]
