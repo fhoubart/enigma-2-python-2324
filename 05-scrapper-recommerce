@@ -1,0 +1,70 @@
+from bs4 import BeautifulSoup
+import requests
+import time
+import re
+import pandas as pd
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
+base_url = "https://www.recommerce.com/fr/tous-les-telephones-reconditionnes"
+
+def get_number_of_pages():
+    homepage = requests.get(base_url, headers=headers)
+    soup = BeautifulSoup(homepage.text, 'html.parser')
+    last_page_text = soup.find('div',{'class':'pages'}).find('span',{'class':'last'}).text.strip()
+    last_page = int(re.sub("[a-zA-Z\s]*","",last_page_text))
+    return last_page
+
+"""
+    <div>
+        <p class="big">
+            Ceci est un paragraphe
+        </p>
+    </div>
+
+    p = soup.find("p",{'class':'big})
+    p.text => Ceci est un paragraphe (avec tous les espaces à gauche et à droite)
+    p["attr"] => la valeur de l'attribut attr
+"""
+def get_list_of_product_urls(url):
+
+    homepage = requests.get("https://www.recommerce.com/fr/tous-les-telephones-reconditionnes", headers=headers)
+
+    soup = BeautifulSoup(homepage.text, 'html.parser')
+    products = soup.find_all('li',{'class': 'product-item'})
+    urls = []
+    for p in products:
+        urls.append(p.a["href"])
+    return urls
+
+
+def scrap_product_page(url):
+    page = requests.get(url,headers=headers).text
+    soup = BeautifulSoup(page, 'html.parser')
+    specTable = soup.find('table', id="product-attribute-specs-table")
+    dict = {}
+    price_string = soup.find('meta',{'property':'product:price:amount'})["content"].strip()
+    price = float(price_string)
+    #price = re.sub(r"(\d+),(\d+)\s€", r"\1.\2", price_string)
+    dict["price"] = price
+    for tr in specTable.find_all('tr'):
+        key = tr.th.text.strip()
+        value = tr.td.text.strip()
+        dict[key] = value
+    return dict
+
+
+# Get number of pages
+number_of_pages = get_number_of_pages()
+df = pd.DataFrame()
+for page in range(1,number_of_pages+1):
+    print("===== page ",page,"=====")
+    urls = get_list_of_product_urls(base_url+"?p"+str(page))
+    for url in urls:
+        time.sleep(0.5)
+        print("scraping "+url)
+        new_row = pd.DataFrame([scrap_product_page(url)])
+        print(new_row["price"])
+        df = pd.concat([df,new_row], ignore_index=True)
+
+print(df)
+df.to_csv("data.csv")
